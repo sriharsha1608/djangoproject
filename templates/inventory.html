@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Comptible" content='IE=edge'>
-    <title>Quantity</title>
+    <title>Inventory</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel='stylesheet' type="text/css" media="screen" href="main.css">
     <script src="main.js"></script>
     
 </head>
 <body>
-    <form action="quantity" method="post">
+    <form action="inventory" method="post">
         {% csrf_token %}
 
         
-        <input type="text" name="item_name" placeholder="item_Name"><br>
-        <input type="number" name="Item_Quantity" placeholder="Item_Quantity"><br>
+        <input type="text" name="item_name" placeholder="item_name"><br>
+        <input type="text" name="branch" placeholder="branch"><br>
+        <input type="number" name="item_quantity" placeholder="item_quantity"><br>
         <input type="submit" value="Submit">
 
 

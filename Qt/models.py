@@ -14,15 +14,16 @@ class Item(models.Model):
     #Item_Size = models.CharField(max_length=300)
 
 class Branch(models.Model):
-    Branch_code = models.CharField(max_length=300, unique=True)
+    Branch_Code = models.CharField(max_length=300, unique=True)
     Branch_Name = models.CharField(max_length=300)
     Branch_Addres = models.CharField(max_length=300)
 
 
-class Quantity(models.Model):
+class Inventory(models.Model):
     
-    Item_Name = models.ForeignKey(Item, on_delete=models.CASCADE,to_field='id', null=True)
-    Item_Quantity = models.IntegerField()
+    item = models.ForeignKey(Item, on_delete=models.CASCADE,to_field='id', null=True)
+    brach = models.ForeignKey(Branch, on_delete=models.CASCADE,to_field='id', null=True)
+    quantity = models.IntegerField()
 
 
 class Transactions(models.Model):
@@ -30,5 +31,6 @@ class Transactions(models.Model):
     Item_Id = models.IntegerField(null=False)
     Source_Branch = models.CharField(max_length=300,null=False)
     Destination_Branch = models.CharField(max_length=300,null=False)
+    Transaction_Type = models.CharField(max_length=300,null=False)
     Quantity = models.IntegerField(null=False)
     

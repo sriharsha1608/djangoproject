@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 
 # Create your views here.
-from .models import Post,Item,Branch,Quantity,Transactions
+from .models import Post,Item,Branch,Transactions,Inventory
 from django.contrib.auth.models import User,auth
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
@@ -32,22 +32,23 @@ def nlrdetail(request):
     result=Post.objects.all()
     return render(request,"nlrdetail.html",{"Post":result})
 
-def quantity(request):
+def inventory(request):
     '''if request.user.is_authenticated:
         user = request.user
     else:
         return  render(request,'login.html')'''
     if request.method == 'POST':
-        if request.POST.get('item_name') and request.POST.get('Item_Quantity'):
-            quantity=Quantity()
-            quantity.Item_Name= request.POST.get('Item_Name')
-            quantity.Item_Quantity= request.POST.get('Item_Quantity')
-            quantity.save()
+        if request.POST.get('item_name') and request.POST.get('item_quantity') and request.POST.get('branch'):
+            inventory=Inventory()
+            inventory.Item_Name= request.POST.get('item_name')
+            inventory.Item_Quantity= request.POST.get('item_quantity')
+            inventory.branch=request.POST.get('branch')
+            inventory.save()
 
             return redirect('/')  
 
     else:
-        return render(request,'quantity.html')
+        return render(request,'inventory.html')
 
 
 def branch(request):
@@ -87,16 +88,32 @@ def item(request):
 
 def transaction(request):
     if request.method == 'POST':
-        if request.POST.get('Item_Id') and request.POST.get('Source_Branch') and request.POST.get('Destination_Branch') and request.POST.get('Quantity'):
+        #extract Information
+        t_item_id = request.POST.get('Item_Id')
+        t_source_branch = request.POST.get('Source_Branch')
+        t_destination_branch = request.POST.get('Destination_Branch')
+        t_quantity = request.POST.get('Quantity')
+        t_type = request.POST.get('Transaction_Type')
+        if t_item_id and t_source_branch and t_destination_branch and t_quantity:
             transaction = Transactions()
-            transaction.Item_Id = request.POST.get('Item_Id')
-            transaction.Source_Branch = request.POST.get('Source_Branch')
-            transaction.Destination_Branch = request.POST.get('Destination_Branch')
-            transaction.Quantity= request.POST.get('Quantity')
+            transaction.Item_Id = t_item_id
+            transaction.Source_Branch = t_source_branch
+            transaction.Destination_Branch = t_destination_branch
+            transaction.Quantity = t_quantity
             transaction.save()
+
+            source_inventory = Inventory.objects.get(branch_branch_name=t_source_branch, item_id=t_item_id)
+            destination_inventory = Inventory.objects.get(branch_branch_name=t_destination_branch, item_id=t_item_id)
+            if request.POST.get('Transaction_Type') == 'DEBIT':
+              source_inventory.quantity -= t_quantity
+              destination_inventory.quantity += t_quantity
+            else:
+              source_inventory.quantity += t_quantity
+              destination_inventory.quantity -= t_quantity
+            source_inventory.save()
+            destination_inventory.save()
             return redirect('/')  
 
     else:
         return render(request,'transaction.html')
-
 
