@@ -42,7 +42,7 @@ def inventory(request):
             inventory=Inventory()
             inventory.Item_Name= request.POST.get('item_name')
             inventory.Item_Quantity= request.POST.get('item_quantity')
-            inventory.branch=request.POST.get('branch')
+            inventory.branch=request.POST.get('branch_code')
             inventory.save()
 
             return redirect('/')  
@@ -102,8 +102,8 @@ def transaction(request):
             transaction.Quantity = t_quantity
             transaction.save()
 
-            source_inventory = Inventory.objects.get(branch_branch_name=t_source_branch, item_id=t_item_id)
-            destination_inventory = Inventory.objects.get(branch_branch_name=t_destination_branch, item_id=t_item_id)
+            source_inventory = Inventory.objects.get(branch_Branch_Code=t_source_branch, item_id=t_item_id)
+            destination_inventory = Inventory.objects.get(branch_Branch_Code=t_destination_branch, item_id=t_item_id)
             if request.POST.get('Transaction_Type') == 'DEBIT':
               source_inventory.quantity -= t_quantity
               destination_inventory.quantity += t_quantity

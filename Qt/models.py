@@ -14,15 +14,16 @@ class Item(models.Model):
     #Item_Size = models.CharField(max_length=300)
 
 class Branch(models.Model):
-    Branch_Code = models.CharField(max_length=300, unique=True)
+    Branch_Code = models.CharField(max_length=300)
     Branch_Name = models.CharField(max_length=300)
     Branch_Addres = models.CharField(max_length=300)
+    #id = models.AutoField(primary_key=True,unique=True, null=False)
 
 
 class Inventory(models.Model):
     
-    item = models.ForeignKey(Item, on_delete=models.CASCADE,to_field='id', null=True)
-    brach = models.ForeignKey(Branch, on_delete=models.CASCADE,to_field='id', null=True)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE,to_field='id',null=True)
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE,to_field='id',null=True)
     quantity = models.IntegerField()
 
 
